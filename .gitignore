@@ -37,6 +37,7 @@ gcp-*.json
 !README.md
 !DETECTION_METHODS.md
 !ARCHITECTURE.md
+!ETHICS_AND_SCOPE.md
 
 # --- Web app ---
 site/node_modules/
