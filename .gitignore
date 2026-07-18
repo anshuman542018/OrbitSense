@@ -32,9 +32,10 @@ gcp-*.json
 *_private*
 *_confidential*
 
-# --- Docs: keep everything local except the public README ---
+# --- Docs: keep everything local except the public ones ---
 *.md
 !README.md
+!DETECTION_METHODS.md
 
 # --- Web app ---
 site/node_modules/
