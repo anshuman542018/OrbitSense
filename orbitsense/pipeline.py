@@ -14,6 +14,7 @@ from pathlib import Path
 
 import pandas as pd
 
+from .alerts import maybe_alert
 from .analyst import narrate_maneuver
 from .catalog import ingest
 from .detector import scan_ledger
@@ -74,6 +75,9 @@ def run(
     feed = write_feed(cards, out_dir=events_dir)
     globe = write_globe(conjunctions, out_dir=events_dir)
 
+    # 6. Critical close-approach alert (only if ORBITSENSE_ALERT_TO is set).
+    alert = maybe_alert(conjunctions)
+
     summary = {
         "ran_at": datetime.now(timezone.utc).isoformat(),
         "ingest": ing,
@@ -83,6 +87,7 @@ def run(
         "cards": len(cards),
         "feed": feed,
         "globe": globe,
+        "alert": alert,
     }
     (events_dir / "pipeline_summary.json").write_text(json.dumps(summary, indent=2, default=str))
     return summary

@@ -38,6 +38,28 @@ pip install -e .
 orbitsense run --group active --hours 72   # full pipeline: ingest → screen → detect → narrate → feed
 ```
 
+## Email alerts (optional)
+
+The daily pipeline can email you when a conjunction breaches a tight critical
+threshold. It flags only genuine high-energy near-misses — co-located assemblies
+and near-zero-closing-speed formation neighbours are filtered out — and the email
+is capped to the tightest few with a total count. Alerts go **only** to the
+addresses you configure; the tool never notifies third parties.
+
+Enable it by setting these on the repo (Settings → Secrets and variables → Actions):
+
+| Secret | Purpose |
+|---|---|
+| `ORBITSENSE_ALERT_TO` | Comma-separated recipient address(es). Required to send. |
+| `ORBITSENSE_SMTP_USER` | Sending mailbox (e.g. a Gmail address). |
+| `ORBITSENSE_SMTP_PASS` | SMTP password / [Gmail app password](https://support.google.com/accounts/answer/185833). |
+
+Optional variables: `ORBITSENSE_ALERT_KM` (critical miss threshold, default `1.0`),
+`ORBITSENSE_SMTP_HOST` (default `smtp.gmail.com`), `ORBITSENSE_SMTP_PORT` (default `587`).
+
+> These are **screening-level** notices from public elements — not
+> collision-probability warnings and not an operational safety service.
+
 ## Architecture — "The Watchtower"
 
 ```

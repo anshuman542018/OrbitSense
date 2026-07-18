@@ -47,6 +47,14 @@ jobs:
           ORBITSENSE_LLM: ${{ vars.ORBITSENSE_LLM || 'none' }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          # Critical close-approach email alerts — sent only if ALERT_TO is set.
+          # Set these as repo secrets/variables to enable (see README).
+          ORBITSENSE_ALERT_TO: ${{ secrets.ORBITSENSE_ALERT_TO }}
+          ORBITSENSE_ALERT_KM: ${{ vars.ORBITSENSE_ALERT_KM || '1.0' }}
+          ORBITSENSE_SMTP_HOST: ${{ vars.ORBITSENSE_SMTP_HOST || 'smtp.gmail.com' }}
+          ORBITSENSE_SMTP_PORT: ${{ vars.ORBITSENSE_SMTP_PORT || '587' }}
+          ORBITSENSE_SMTP_USER: ${{ secrets.ORBITSENSE_SMTP_USER }}
+          ORBITSENSE_SMTP_PASS: ${{ secrets.ORBITSENSE_SMTP_PASS }}
         run: orbitsense run --data data --group active --hours 72
 
       - name: Commit ledger + events to data branch
