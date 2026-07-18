@@ -1,25 +1,20 @@
-"""Two-stage conjunction screening.
+"""Conjunction screening: spatial hashing in time, geometric filters on the side.
 
-Naive all-pairs screening of a 16k-object catalog is 128M pairs — infeasible
-at fine time steps. The classic smart-filter design used here:
+The production path (`screen` / `screen_satrecs`) propagates the whole
+catalog on a coarse grid and, at every timestep, builds a KD-tree over all
+positions to find spatially-near pairs — O(n log n) per step instead of
+O(pairs x steps). A linear relative-motion estimate turns each spatial hit
+into an accurate predicted miss distance and TCA; only near-threshold
+candidates reach golden-section SGP4 refinement (sub-second TCA precision).
+This design was forced by data: dense constellations defeat pair-oriented
+screening (Starlink alone: ~31M geometrically-plausible pairs x 5.7k steps
+is 10^11 distance evaluations), while the standing population of
+spatially-near pairs at any instant is only thousands.
 
-Stage 1 (geometry, no propagation):
-  a) Altitude-band filter — a pair can only approach if their
-     [perigee - pad, apogee + pad] shells overlap.
-  b) Node-radius filter — two orbits in different planes can only come close
-     near the mutual line of nodes. Each orbit's radius along the +/- node
-     direction is computed from its ellipse; the pair survives only if the
-     radii differ by less than the pad somewhere on the node line. Near-
-     coplanar pairs (relative inclination below a few degrees) skip this
-     test, since they can approach anywhere on the orbit.
-
-Stage 2 (propagation):
-  Every surviving object is propagated ONCE on a coarse grid (not per pair).
-  Per-pair distance series are scanned for local minima below a conservative
-  gate (a 1 km miss can look like hundreds of km at the nearest coarse
-  sample, so the gate accounts for maximum closing speed x half step). Each
-  candidate minimum is then refined by golden-section search on the true
-  SGP4 relative distance, down to sub-second time resolution.
+The classic geometric pre-filters (altitude-band overlap, node-radius test)
+are kept as public utilities: they answer "which pairs COULD ever meet"
+without any propagation, which is useful for targeted analyses and is the
+traditional first stage this design replaces.
 
 All distances are TEME km; screening-level results only (no covariance).
 """
@@ -88,9 +83,14 @@ def altitude_band_pairs(apogee: np.ndarray, perigee: np.ndarray, pad_km: float) 
 
 def node_radius_filter(
     elems: dict[str, np.ndarray], pairs: np.ndarray, pad_km: float,
-    coplanar_deg: float = 3.0,
+    coplanar_deg: float = 3.0, chunk: int = 1_000_000,
 ) -> np.ndarray:
-    """Keep pairs whose orbit radii can actually meet near the mutual node line."""
+    """Keep pairs whose orbit radii can actually meet near the mutual node line.
+
+    Processed in chunks: dense constellations can push tens of millions of
+    pairs through here, and the intermediate 3-vectors would otherwise need
+    several GB at once.
+    """
     if len(pairs) == 0:
         return pairs
     inc, raan = elems["inc"], elems["raan"]
@@ -103,29 +103,31 @@ def node_radius_filter(
         np.cos(inc),
     ], axis=1)
 
-    i, j = pairs[:, 0], pairs[:, 1]
-    cross = np.cross(h[i], h[j])
-    norm = np.linalg.norm(cross, axis=1)
-    rel_inc = np.arcsin(np.clip(norm, 0, 1))
-    coplanar = rel_inc < np.radians(coplanar_deg)
+    kept: list[np.ndarray] = []
+    for s in range(0, len(pairs), chunk):
+        block = pairs[s:s + chunk]
+        i, j = block[:, 0], block[:, 1]
+        cross = np.cross(h[i], h[j])
+        norm = np.linalg.norm(cross, axis=1)
+        rel_inc = np.arcsin(np.clip(norm, 0, 1))
+        coplanar = rel_inc < np.radians(coplanar_deg)
 
-    keep = coplanar.copy()  # near-coplanar pairs pass automatically
-    idx = np.nonzero(~coplanar)[0]
-    if len(idx):
-        node = cross[idx] / norm[idx, None]
-        ii, jj = i[idx], j[idx]
-        min_gap = np.full(len(idx), np.inf)
-        for sign in (1.0, -1.0):
-            ra = _radius_along(sma[ii], ecc[ii], inc[ii], raan[ii], argp[ii], sign * node)
-            rb = _radius_along(sma[jj], ecc[jj], inc[jj], raan[jj], argp[jj], -sign * node)
-            # Node direction for orbit b is anti-parallel: h_i x h_j points along
-            # ascending node of a relative to b's plane crossing; check both signs
-            # for both orbits to be safe.
-            rb2 = _radius_along(sma[jj], ecc[jj], inc[jj], raan[jj], argp[jj], sign * node)
-            gap = np.minimum(np.abs(ra - rb), np.abs(ra - rb2))
-            min_gap = np.minimum(min_gap, gap)
-        keep[idx] = min_gap < pad_km
-    return pairs[keep]
+        keep = coplanar.copy()  # near-coplanar pairs pass automatically
+        idx = np.nonzero(~coplanar)[0]
+        if len(idx):
+            node = cross[idx] / norm[idx, None]
+            ii, jj = i[idx], j[idx]
+            min_gap = np.full(len(idx), np.inf)
+            for sign in (1.0, -1.0):
+                ra = _radius_along(sma[ii], ecc[ii], inc[ii], raan[ii], argp[ii], sign * node)
+                # The node line pierces orbit b on both sides; check both.
+                rb = _radius_along(sma[jj], ecc[jj], inc[jj], raan[jj], argp[jj], -sign * node)
+                rb2 = _radius_along(sma[jj], ecc[jj], inc[jj], raan[jj], argp[jj], sign * node)
+                gap = np.minimum(np.abs(ra - rb), np.abs(ra - rb2))
+                min_gap = np.minimum(min_gap, gap)
+            keep[idx] = min_gap < pad_km
+        kept.append(block[keep])
+    return np.concatenate(kept) if kept else np.empty((0, 2), dtype=int)
 
 
 def _radius_along(sma, ecc, inc, raan, argp, u: np.ndarray) -> np.ndarray:
@@ -158,45 +160,6 @@ def _radius_along(sma, ecc, inc, raan, argp, u: np.ndarray) -> np.ndarray:
 
 
 # ---------------------------------------------------------------- stage 2
-
-def _pair_minima(
-    r: np.ndarray,
-    v: np.ndarray,
-    pairs: np.ndarray,
-    step_s: float,
-    threshold_km: float,
-    chunk: int = 1000,
-) -> list[tuple[int, int]]:
-    """(pair_index, time_index) of coarse local distance minima worth refining.
-
-    The gate is velocity-aware: a candidate minimum survives only if its
-    coarse distance could hide a sub-threshold approach given the pair's
-    ACTUAL closing speed there (relspeed x half-step, with 25% margin).
-    A worst-case constant gate (~460 km in LEO) drowns stage 2 in
-    same-shell constellation pairs; the dynamic gate keeps coplanar pairs
-    (mm/s..m/s closing speeds) at a few-km gate while preserving the wide
-    gate for genuine fast plane crossings.
-    """
-    hits: list[tuple[int, int]] = []
-    r32 = r.astype(np.float32)
-    v32 = v.astype(np.float32)
-    for s in range(0, len(pairs), chunk):
-        block = pairs[s:s + chunk]
-        d = np.linalg.norm(r32[block[:, 0]] - r32[block[:, 1]], axis=2)
-        interior = (d[:, 1:-1] <= d[:, :-2]) & (d[:, 1:-1] <= d[:, 2:])
-        bi, ti = np.nonzero(interior)
-        if len(bi) == 0:
-            continue
-        ti = ti + 1
-        rel_speed = np.linalg.norm(
-            v32[block[bi, 0], ti] - v32[block[bi, 1], ti], axis=1,
-        )
-        gate = rel_speed * (step_s / 2.0) * 1.25 + threshold_km
-        keep = d[bi, ti] < gate
-        for b, t in zip(bi[keep], ti[keep]):
-            hits.append((s + int(b), int(t)))
-    return hits
-
 
 def _refine_tca(
     sat_a: Satrec, sat_b: Satrec, t_lo: datetime, t_hi: datetime, tol_s: float = 0.1,
@@ -238,15 +201,13 @@ def screen(
     start: datetime,
     hours: float = 72.0,
     threshold_km: float = 5.0,
-    pad_km: float = 25.0,
-    coarse_step_s: float = 60.0,
+    coarse_step_s: float = 15.0,
 ) -> list[Conjunction]:
-    """Full two-stage screen. Returns conjunctions under threshold, sorted by miss."""
+    """Full catalog screen. Returns conjunctions under threshold, sorted by miss."""
     sats, names = to_satrecs(records)
     return screen_satrecs(
         sats, names, start,
-        hours=hours, threshold_km=threshold_km,
-        pad_km=pad_km, coarse_step_s=coarse_step_s,
+        hours=hours, threshold_km=threshold_km, coarse_step_s=coarse_step_s,
     )
 
 
@@ -256,35 +217,115 @@ def screen_satrecs(
     start: datetime,
     hours: float = 72.0,
     threshold_km: float = 5.0,
-    pad_km: float = 25.0,
-    coarse_step_s: float = 60.0,
+    coarse_step_s: float = 15.0,
+    max_rel_speed_km_s: float = 16.0,
+    time_chunk_hours: float = 3.0,
 ) -> list[Conjunction]:
-    elems = orbit_elements(sats)
+    """Spatial-hash screening: per-timestep KD-tree + linear miss estimate.
 
-    pairs = altitude_band_pairs(elems["apogee"], elems["perigee"], pad_km)
-    pairs = node_radius_filter(elems, pairs, pad_km)
-    if len(pairs) == 0:
+    Per-pair time scanning breaks down on dense constellations (Starlink
+    alone yields ~31M geometrically-plausible pairs; times 5.7k steps that
+    is 10^11 distance evaluations). Instead, each coarse timestep builds a
+    KD-tree over all positions — O(n log n) — and queries pairs within a
+    radius that bounds how far a sub-threshold approach can hide between
+    samples (max closing speed x half step). Measured on live Starlink data
+    this keeps ~6.5k standing pairs per step, and the whole tree pass runs
+    in tens of milliseconds.
+
+    For each spatial hit, the linear relative-motion closest approach
+    (perpendicular component of separation w.r.t. relative velocity) gives
+    an accurate miss estimate from a single sample — valid precisely near
+    conjunctions, where relative motion is locally straight. Only hits whose
+    estimate lands near the threshold reach golden-section SGP4 refinement.
+
+    Time is processed in chunks of `time_chunk_hours` to bound memory
+    (positions+velocities for 27k objects x 3h @ 15s stay under ~1 GB).
+    """
+    from scipy.spatial import cKDTree
+
+    radius = max_rel_speed_km_s * (coarse_step_s / 2.0) * 1.1 + threshold_km
+    refine_gate = threshold_km * 3.0 + 1.0
+    step = timedelta(seconds=coarse_step_s)
+
+    total_steps = int(hours * 3600 / coarse_step_s)
+    steps_per_chunk = max(2, int(time_chunk_hours * 3600 / coarse_step_s))
+
+    cand_i: list[np.ndarray] = []
+    cand_j: list[np.ndarray] = []
+    cand_t: list[np.ndarray] = []      # estimated TCA, seconds from start
+    cand_est: list[np.ndarray] = []    # estimated miss, km
+    cand_wide: list[np.ndarray] = []   # slow drifter: needs a wide bracket
+
+    for s0 in range(0, total_steps + 1, steps_per_chunk):
+        n = min(steps_per_chunk, total_steps + 1 - s0)
+        chunk_start = start + s0 * step
+        e, r, v = propagate_many(
+            sats, chunk_start, (n - 1) * coarse_step_s / 3600.0, coarse_step_s,
+        )
+        # Park failed propagations far away so they can never pair.
+        r = np.where((e != 0)[:, :, None], 1e12, r)
+        for k in range(n):
+            tree = cKDTree(r[:, k, :])
+            pk = tree.query_pairs(radius, output_type="ndarray")
+            if len(pk) == 0:
+                continue
+            dr = r[pk[:, 0], k] - r[pk[:, 1], k]
+            dv = v[pk[:, 0], k] - v[pk[:, 1], k]
+            d2 = np.einsum("ij,ij->i", dr, dr)
+            drv = np.einsum("ij,ij->i", dr, dv)
+            dv2 = np.maximum(np.einsum("ij,ij->i", dv, dv), 1e-12)
+            est_miss2 = np.maximum(d2 - drv**2 / dv2, 0.0)
+            dt_est = -drv / dv2  # seconds to linear closest approach
+
+            # Candidate if the linear estimate is near threshold AND its TCA
+            # falls by this sample (adjacent samples cover the rest), or the
+            # pair is simply already inside the refine gate (slow drifters,
+            # where curvature makes the linear TCA estimate unreliable —
+            # they are flagged `wide` and get a bucket-sized refine bracket).
+            near = (est_miss2 < refine_gate**2) & (np.abs(dt_est) <= coarse_step_s)
+            close = d2 < refine_gate**2
+            m = near | close
+            if not m.any():
+                continue
+            t_off = (s0 + k) * coarse_step_s + np.where(near[m], dt_est[m], 0.0)
+            cand_i.append(pk[m, 0])
+            cand_j.append(pk[m, 1])
+            cand_t.append(t_off)
+            cand_est.append(np.where(near[m], np.sqrt(est_miss2[m]), np.sqrt(d2[m])))
+            cand_wide.append(close[m] & ~near[m])
+
+    if not cand_i:
         return []
 
-    # Propagate only objects that appear in surviving pairs — each exactly once.
-    used = np.unique(pairs)
-    remap = {int(g): k for k, g in enumerate(used)}
-    sub = [sats[g] for g in used]
-    e, r, v = propagate_many(sub, start, hours, coarse_step_s)
-    bad = (e != 0)[:, :, None]
-    r = np.where(bad, np.nan, r)
-    v = np.where(bad, 0.0, v)
-    local = np.array([[remap[int(a)], remap[int(b)]] for a, b in pairs])
+    ci = np.concatenate(cand_i)
+    cj = np.concatenate(cand_j)
+    ct = np.concatenate(cand_t)
+    ce = np.concatenate(cand_est)
+    cw = np.concatenate(cand_wide)
 
-    hits = _pair_minima(r, v, local, coarse_step_s, threshold_km)
-    step = timedelta(seconds=coarse_step_s)
+    # One refinement per (pair, ~10 min bucket): keep the best estimate.
+    bucket_s = 600.0
+    buckets: dict[tuple[int, int, int], int] = {}
+    for idx in range(len(ci)):
+        key = (int(ci[idx]), int(cj[idx]), int(ct[idx] // bucket_s))
+        best = buckets.get(key)
+        if best is None or ce[idx] < ce[best]:
+            buckets[key] = idx
+
     results: dict[tuple[int, int, int], Conjunction] = {}
-    for pi, ti in hits:
-        gi, gj = int(pairs[pi, 0]), int(pairs[pi, 1])
-        t_mid = start + ti * step
-        tca, miss, rel_speed = _refine_tca(sats[gi], sats[gj], t_mid - step, t_mid + step)
+    for (gi, gj, _), idx in buckets.items():
+        t_mid = start + timedelta(seconds=float(ct[idx]))
+        # Fast crossings have a trustworthy linear TCA: tight bracket.
+        # Slow drifters' minima wander anywhere inside the bucket: the
+        # bracket must span it (d(t) is unimodal on this scale — relative
+        # oscillation periods are ~an orbit, far longer than a bucket).
+        half = timedelta(seconds=bucket_s / 2 + 2 * coarse_step_s) if cw[idx] \
+            else 2 * step
+        tca, miss, rel_speed = _refine_tca(
+            sats[gi], sats[gj], t_mid - half, t_mid + half,
+        )
         if miss <= threshold_km:
-            key = (gi, gj, int(tca.timestamp() // 300))  # dedupe minima within 5 min
+            key = (gi, gj, int(tca.timestamp() // 300))  # dedupe within 5 min
             existing = results.get(key)
             if existing is None or miss < existing.miss_distance_km:
                 results[key] = Conjunction(

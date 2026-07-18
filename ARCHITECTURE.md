@@ -13,37 +13,36 @@
 contextualizes, and narrates.** The analyst never invents an orbital state; every
 claim in an event card cites a number the pipeline computed.
 
-## Two-stage conjunction screening
+## Conjunction screening: spatial hashing in time
 
-Naive all-pairs screening of ~16k objects is 128M pairs — infeasible at fine time
-steps. The screener (`orbitsense/screener.py`) uses the classic smart-filter design:
+Naive all-pairs screening of ~16k objects is 128M pairs. The classic remedy —
+geometric pair filters (altitude-band overlap, node-radius test, both implemented
+and kept as utilities) — **fails on mega-constellations**: measured on live data,
+Starlink alone leaves ~31M of 34M same-shell pairs standing, because satellites at
+the same altitude in crossing planes genuinely *can* meet. Pair-oriented screening
+is the wrong shape; 31M pairs × 5.7k timesteps is 10¹¹ distance evaluations.
 
-### Stage 1 — pure geometry, no propagation
+The production screener (`orbitsense/screener.py`) is position-oriented instead:
 
-a) **Altitude-band filter.** A pair can only meet if the radial shells
-   `[perigee − pad, apogee + pad]` overlap. Implemented as a sweep over
-   perigee-sorted intervals (O(n log n + k), no n² matrix).
+1. **Propagate everything once** on a coarse grid (15 s), in time chunks that
+   bound memory (~1 GB for the full catalog).
+2. **Per timestep, build a KD-tree** over all positions — O(n log n) — and query
+   pairs within a radius that bounds how far a sub-threshold approach can hide
+   between samples (max closing speed × half step ≈ 130 km). Measured: ~6.5k
+   standing pairs per step for Starlink, ~20 ms per tree including queries.
+3. **Linear relative-motion estimate** per spatial hit: near closest approach
+   relative motion is locally straight, so the perpendicular component of
+   separation w.r.t. relative velocity predicts the true miss from a single
+   sample, and −(Δr·Δv)/|Δv|² predicts the TCA. Only estimates near the
+   threshold survive.
+4. **Golden-section refinement** on true SGP4 separation to 0.1 s. Fast
+   crossings get a tight bracket around the linear TCA; slow drifters (whose
+   curvature defeats the linear estimate) get a bucket-wide bracket — their
+   relative motion is unimodal on that scale.
 
-b) **Node-radius filter.** Orbits in different planes can only come close near
-   their mutual line of nodes (`ĥ₁ × ĥ₂`). Each orbit's radius along ± that
-   direction comes from its ellipse (r = p / (1 + e·cos ν), ν from the perifocal
-   projection of the node vector). Survive only if radii agree within the pad
-   somewhere on the node line. Near-coplanar pairs (< 3° relative inclination)
-   skip this test — they can approach anywhere along the orbit.
-
-### Stage 2 — propagate once, gate dynamically, refine precisely
-
-- Every object that survives stage 1 is propagated **once** on a coarse grid
-  (60 s), never per pair.
-- Per-pair distance series are scanned for local minima. A minimum is kept only if
-  its coarse distance could hide a sub-threshold approach given the pair's **actual
-  closing speed at that sample** (relspeed × step/2 × 1.25 + threshold). This
-  velocity-aware gate is what keeps dense constellations tractable: coplanar
-  Starlink neighbors close at mm/s–m/s and get a few-km gate, while genuine
-  ~14 km/s plane crossings keep the wide gate they need. A worst-case constant
-  gate (~460 km in LEO) drowns stage 2 in same-shell false candidates.
-- Each surviving candidate is refined by golden-section search on the true SGP4
-  separation down to 0.1 s, yielding TCA, miss distance, and relative speed.
+**Measured**: 10,784 Starlink objects, 24 h window, 5 km threshold → 22,349
+conjunctions in 256 s on a commodity laptop. Full-catalog 72 h screening fits in
+~15 min of free CI compute.
 
 **Verification** (in `tests/test_screener.py`): screener output matches 1 s / 0.5 s
 brute-force propagation on designed conjunction geometries — slow coplanar drift

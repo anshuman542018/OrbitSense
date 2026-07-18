@@ -24,6 +24,13 @@
   used for the Phase 0 proof and detector calibration, without an account.
 - Upstream source is CelesTrak; same attribution applies.
 
+## navsuite/celestrak-orbital-data (fallback mirror)
+
+- Open GitHub repo archiving daily per-constellation TLE snapshots from CelesTrak
+  (Starlink, OneWeb, Kuiper, Iridium, ...), organized `constellation/YYYY/DDD/`.
+- Used as a fallback when a CelesTrak group is inside its 2h block window, and as
+  a free source of constellation history. Upstream attribution: CelesTrak.
+
 ## UCS Satellite Database (planned)
 
 - Owner, operator, mission metadata for narrative context in event cards.
