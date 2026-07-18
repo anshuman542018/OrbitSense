@@ -40,10 +40,16 @@ jobs:
       - name: Install
         run: pip install -e .
 
-      - name: Ingest catalog
-        run: orbitsense ingest --group active --ledger data/ledger
+      - name: Run pipeline (ingest, screen, detect, narrate, feed)
+        env:
+          # Set GEMINI_API_KEY (free tier) or ANTHROPIC_API_KEY in repo secrets
+          # to upgrade narration; without it the pipeline uses template cards.
+          ORBITSENSE_LLM: ${{ vars.ORBITSENSE_LLM || 'none' }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: orbitsense run --data data --group active --hours 72
 
-      - name: Commit ledger to data branch
+      - name: Commit ledger + events to data branch
         run: |
           cd data
           if [ ! -d .git ]; then
