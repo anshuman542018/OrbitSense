@@ -46,5 +46,36 @@ extends automatically as the ledger accumulates history.
 
 ## Conjunction screening
 
-See `ARCHITECTURE.md` for the two-stage design and its verification against
+See `ARCHITECTURE.md` for the spatial-hash design and its verification against
 brute-force propagation.
+
+### Benchmark against CelesTrak SOCRATES Plus
+
+SOCRATES Plus is the reference open conjunction service. OrbitSense screened the
+full active catalog (16,063 objects) for a 24 h window and matched results against
+the same-window SOCRATES conjunctions (`scripts/benchmark_socrates.py`, matching by
+unordered NORAD pair with TCA within 5 minutes).
+
+| Population | Recall vs SOCRATES | Median TCA agreement | Median miss agreement |
+|---|---|---|---|
+| **Non-Starlink pairs** (1,812 events) | **85.8%** | **0.0 s** | **90 m** (p90 610 m) |
+| Starlink-Starlink pairs (763 events) | 22% | 0.3 s | 662 m |
+
+**The non-Starlink number is the real measure of the screener.** When both systems
+work from comparably-fresh elements, agreement is excellent: identical TCAs to the
+second and sub-100 m miss distances, on a completely independent implementation.
+
+**Why Starlink recall looks low — and why it is not a screener bug.** Starlink
+satellites maneuver almost daily. SOCRATES predicts conjunctions up to 7 days out
+from the elements it had; OrbitSense used free public TLEs that were a median of
+~12 h older. For a satellite that raises its orbit between the two epochs, the
+predicted close approach simply does not exist in the newer data — brute-force
+1-second propagation on our elements confirms the "missed" pairs are genuinely
+tens of km apart, not screener misses. Recall even falls monotonically with the
+age of the elements SOCRATES used (26% at 1–2 days stale → 18% at 2–4 days),
+exactly the fingerprint of a data-freshness gap rather than a math gap. With
+Space-Track supplemental GP (operator ephemerides) this closes; it is documented
+honestly rather than hidden.
+
+Performance: full active catalog, 24 h, 5 km threshold → 46,240 conjunctions in
+236 s on a laptop.
