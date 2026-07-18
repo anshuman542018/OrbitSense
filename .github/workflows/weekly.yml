@@ -1,0 +1,46 @@
+# Weekly "State of the Orbits" report — recurring shareable content.
+# Runs after a week of daily pipeline data has accumulated on the data branch.
+
+name: weekly-report
+
+on:
+  schedule:
+    - cron: "0 12 * * 1"   # Mondays 12:00 UTC
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check out data branch into data/
+        uses: actions/checkout@v4
+        with:
+          ref: data
+          path: data
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install
+        run: pip install -e .
+
+      - name: Generate weekly report
+        run: orbitsense report --data data
+
+      - name: Commit report to data branch
+        run: |
+          cd data
+          git config user.name "orbitsense-bot"
+          git config user.email "actions@github.com"
+          git add -A
+          git diff --cached --quiet && echo "No changes" && exit 0
+          git commit -m "report: State of the Orbits $(date -u +%F)"
+          git push origin data
