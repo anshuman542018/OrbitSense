@@ -26,7 +26,7 @@ export default function RootLayout({
               <a href="/globe">3D Globe</a>
               <a href="/chat">Chat</a>
               <a
-                href="https://github.com/OWNER/orbitsense"
+                href="https://github.com/anshuman542018/OrbitSense"
                 target="_blank"
                 rel="noreferrer"
               >
