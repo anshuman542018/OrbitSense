@@ -1,0 +1,12 @@
+.venv/
+__pycache__/
+*.pyc
+*.egg-info/
+build/
+dist/
+data/
+.env
+site/node_modules/
+site/.next/
+site/.vercel/
+scripts/*.png

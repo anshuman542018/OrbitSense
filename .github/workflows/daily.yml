@@ -1,0 +1,59 @@
+# Daily OrbitSense pipeline on free GitHub Actions compute.
+#
+# For now: ingest the CelesTrak active catalog into the parquet element
+# ledger and commit it to the data branch. Screening, detection, and
+# narration stages are appended here as they land (Phases 2-4).
+#
+# The ledger lives on the `data` branch of this repo (kept out of `main`
+# so code history stays clean). The dashboard reads derived JSON from the
+# same branch via the raw CDN.
+
+name: daily-pipeline
+
+on:
+  schedule:
+    - cron: "30 4 * * *"   # daily, offset from the top of the hour (Actions load)
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  pipeline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check out data branch into data/
+        uses: actions/checkout@v4
+        with:
+          ref: data
+          path: data
+        continue-on-error: true   # first run: branch does not exist yet
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install
+        run: pip install -e .
+
+      - name: Ingest catalog
+        run: orbitsense ingest --group active --ledger data/ledger
+
+      - name: Commit ledger to data branch
+        run: |
+          cd data
+          if [ ! -d .git ]; then
+            git init
+            git checkout -b data
+            git remote add origin "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git"
+          fi
+          git config user.name "orbitsense-bot"
+          git config user.email "actions@github.com"
+          git add -A
+          git diff --cached --quiet && echo "No changes" && exit 0
+          git commit -m "ledger: $(date -u +%F)"
+          git push origin data
