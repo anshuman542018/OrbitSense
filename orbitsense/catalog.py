@@ -41,8 +41,25 @@ class TleRecord:
     line2: str
 
 
-def fetch_group_tles(group: str = "active", session: requests.Session | None = None) -> list[TleRecord]:
-    """Fetch a CelesTrak GP group as 3-line TLE records."""
+def fetch_group_tles(
+    group: str = "active",
+    session: requests.Session | None = None,
+    cache_dir: str | Path | None = "data/cache",
+    max_age_hours: float = 2.0,
+) -> list[TleRecord]:
+    """Fetch a CelesTrak GP group as 3-line TLE records.
+
+    Successful responses are cached on disk and reused while fresher than
+    `max_age_hours` — CelesTrak 403-blocks clients that re-download the same
+    query inside its ~2h update window, so never fetching twice is both
+    polite and self-protective.
+    """
+    cache = Path(cache_dir) / f"{group}.tle" if cache_dir else None
+    if cache and cache.exists():
+        age_h = (datetime.now(timezone.utc).timestamp() - cache.stat().st_mtime) / 3600
+        if age_h < max_age_hours:
+            return parse_3le(cache.read_text())
+
     sess = session or requests
     resp = sess.get(
         CELESTRAK_GP,
@@ -51,6 +68,9 @@ def fetch_group_tles(group: str = "active", session: requests.Session | None = N
         timeout=120,
     )
     resp.raise_for_status()
+    if cache:
+        cache.parent.mkdir(parents=True, exist_ok=True)
+        cache.write_text(resp.text)
     return parse_3le(resp.text)
 
 
