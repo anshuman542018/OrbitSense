@@ -53,6 +53,37 @@ def cards_from_conjunctions(
     return [narrate_conjunction(c, provider_spec) for c in pool[:top]]
 
 
+def write_globe(conjunctions: list[Conjunction], out_dir: str | Path = "data/events",
+                top: int = 200) -> dict:
+    """Emit globe.json: conjunction points in TEME km for the 3D view.
+
+    Positions are Earth-centered inertial (TEME) at closest approach. The
+    globe renders them directly against a rotating Earth — visual scale, not
+    a geodetic product.
+    """
+    out = Path(out_dir)
+    out.mkdir(parents=True, exist_ok=True)
+    pts = []
+    pool = [c for c in conjunctions
+            if c.position_km and not is_docked_or_formation(c)]
+    for c in sorted(pool, key=lambda c: c.miss_distance_km)[:top]:
+        x, y, z = c.position_km
+        pts.append({
+            "a": c.name_a, "b": c.name_b,
+            "miss_km": round(c.miss_distance_km, 3),
+            "relv_km_s": round(c.relative_speed_km_s, 2),
+            "tca": c.tca.isoformat(),
+            "pos": [x, y, z],
+        })
+    payload = {
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "earth_radius_km": 6378.137,
+        "points": pts,
+    }
+    (out / "globe.json").write_text(json.dumps(payload))
+    return {"points": len(pts)}
+
+
 def write_feed(cards: list[EventCard], out_dir: str | Path = "data/events") -> dict:
     """Write feed.json (latest N) and a dated daily file."""
     out = Path(out_dir)

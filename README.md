@@ -19,6 +19,14 @@ Early build. What works today:
   on a laptop (~1.7M position evaluations/s) — the whole pipeline fits on free CI compute.
 - **Element ledger**: daily TLE ingestion into a monthly-partitioned Parquet time-series
   (`orbitsense ingest`), the foundation for maneuver detection.
+- **Conjunction screener**: per-timestep KD-tree spatial hashing — survives
+  mega-constellations (10k Starlink objects screened in ~256s). Benchmarked against
+  CelesTrak SOCRATES: 85.8% recall on non-Starlink pairs, TCA agreement to the second,
+  miss-distance agreement to ~90m (see `DETECTION_METHODS.md`).
+- **Maneuver detector**: per-object noise floors + changepoint detection. 100% recall
+  on real ISS reboosts.
+- **Dashboard**: Next.js on Vercel — a plain-language event feed, an interactive 3D
+  orbit globe, and a chat copilot grounded in screened events.
 
 ## Quick start
 

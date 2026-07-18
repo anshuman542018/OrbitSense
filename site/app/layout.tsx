@@ -23,6 +23,7 @@ export default function RootLayout({
             </div>
             <nav className="nav">
               <a href="/">Feed</a>
+              <a href="/globe">3D Globe</a>
               <a href="/chat">Chat</a>
               <a
                 href="https://github.com/OWNER/orbitsense"

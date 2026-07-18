@@ -17,7 +17,7 @@ import pandas as pd
 from .analyst import narrate_maneuver
 from .catalog import ingest
 from .detector import scan_ledger
-from .herald import cards_from_conjunctions, write_feed
+from .herald import cards_from_conjunctions, write_feed, write_globe
 from .screener import screen
 
 
@@ -70,8 +70,9 @@ def run(
         conjunctions, top=top_conjunctions, provider_spec=provider_spec,
     )
 
-    # 5. Publish the feed.
+    # 5. Publish the feed + the 3D globe points.
     feed = write_feed(cards, out_dir=events_dir)
+    globe = write_globe(conjunctions, out_dir=events_dir)
 
     summary = {
         "ran_at": datetime.now(timezone.utc).isoformat(),
@@ -81,6 +82,7 @@ def run(
         "maneuvers": len(maneuver_events),
         "cards": len(cards),
         "feed": feed,
+        "globe": globe,
     }
     (events_dir / "pipeline_summary.json").write_text(json.dumps(summary, indent=2, default=str))
     return summary

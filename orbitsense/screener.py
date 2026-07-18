@@ -42,6 +42,7 @@ class Conjunction:
     tca: datetime                # time of closest approach (UTC)
     miss_distance_km: float
     relative_speed_km_s: float
+    position_km: tuple[float, float, float] | None = None  # TEME midpoint at TCA
 
 
 # ---------------------------------------------------------------- stage 1
@@ -163,37 +164,42 @@ def _radius_along(sma, ecc, inc, raan, argp, u: np.ndarray) -> np.ndarray:
 
 def _refine_tca(
     sat_a: Satrec, sat_b: Satrec, t_lo: datetime, t_hi: datetime, tol_s: float = 0.1,
-) -> tuple[datetime, float, float]:
-    """Golden-section minimization of true SGP4 separation on [t_lo, t_hi]."""
+) -> tuple[datetime, float, float, tuple[float, float, float] | None]:
+    """Golden-section minimization of true SGP4 separation on [t_lo, t_hi].
 
-    def dist(t: datetime) -> tuple[float, float]:
+    Returns (tca, miss_km, rel_speed_km_s, midpoint_position_teme_km).
+    """
+
+    def state(t: datetime):
         jd = _julian_date(t)
         day = np.floor(jd) + 0.5
         e1, ra, va = sat_a.sgp4(day, jd - day)
         e2, rb, vb = sat_b.sgp4(day, jd - day)
         if e1 or e2:
-            return np.inf, np.inf
-        d = float(np.linalg.norm(np.subtract(ra, rb)))
+            return np.inf, np.inf, None
+        ra, rb = np.asarray(ra), np.asarray(rb)
+        d = float(np.linalg.norm(ra - rb))
         rv = float(np.linalg.norm(np.subtract(va, vb)))
-        return d, rv
+        return d, rv, (ra + rb) / 2.0
 
     a, b = t_lo, t_hi
     c = b - timedelta(seconds=GOLDEN * (b - a).total_seconds())
     d_ = a + timedelta(seconds=GOLDEN * (b - a).total_seconds())
-    fc, _ = dist(c)
-    fd, _ = dist(d_)
+    fc = state(c)[0]
+    fd = state(d_)[0]
     while (b - a).total_seconds() > tol_s:
         if fc < fd:
             b, d_, fd = d_, c, fc
             c = b - timedelta(seconds=GOLDEN * (b - a).total_seconds())
-            fc, _ = dist(c)
+            fc = state(c)[0]
         else:
             a, c, fc = c, d_, fd
             d_ = a + timedelta(seconds=GOLDEN * (b - a).total_seconds())
-            fd, _ = dist(d_)
+            fd = state(d_)[0]
     tca = a + (b - a) / 2
-    miss, rel_speed = dist(tca)
-    return tca, miss, rel_speed
+    miss, rel_speed, mid = state(tca)
+    pos = tuple(round(float(x), 1) for x in mid) if mid is not None else None
+    return tca, miss, rel_speed, pos
 
 
 def screen(
@@ -321,7 +327,7 @@ def screen_satrecs(
         # oscillation periods are ~an orbit, far longer than a bucket).
         half = timedelta(seconds=bucket_s / 2 + 2 * coarse_step_s) if cw[idx] \
             else 2 * step
-        tca, miss, rel_speed = _refine_tca(
+        tca, miss, rel_speed, pos = _refine_tca(
             sats[gi], sats[gj], t_mid - half, t_mid + half,
         )
         if miss <= threshold_km:
@@ -330,6 +336,6 @@ def screen_satrecs(
             if existing is None or miss < existing.miss_distance_km:
                 results[key] = Conjunction(
                     sats[gi].satnum, sats[gj].satnum, names[gi], names[gj],
-                    tca, miss, rel_speed,
+                    tca, miss, rel_speed, pos,
                 )
     return sorted(results.values(), key=lambda c: c.miss_distance_km)

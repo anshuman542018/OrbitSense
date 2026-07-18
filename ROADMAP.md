@@ -32,8 +32,9 @@ Status as of the current build. Checked = shipped and validated.
 - [x] Pipeline orchestrator (`orbitsense run`), ETHICS_AND_SCOPE.md
 
 ## Phase 5 — Wow + launch (in progress)
-- [ ] 3D orbit view (CesiumJS / three.js globe)
-- [ ] Weekly auto-generated "State of the Orbits" report
+- [x] 3D orbit view — self-contained three.js globe (wireframe Earth, atmospheric
+      glow, conjunction points colored by closing speed, interactive)
+- [x] Weekly auto-generated "State of the Orbits" report + workflow
 - [ ] Space-Track supplemental GP integration (closes the Starlink freshness gap)
 - [ ] Swap narration to Claude (Haiku routine / Sonnet anomalies, Batch API)
 - [ ] Run quietly for two weeks; launch post with best real cards + benchmarks
