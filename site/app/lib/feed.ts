@@ -21,7 +21,7 @@ export type Feed = {
 // /public/feed.json keeps the page working locally and on first deploy.
 export const FEED_URL =
   process.env.NEXT_PUBLIC_FEED_URL ??
-  "https://cdn.jsdelivr.net/gh/anshuman542018/OrbitSense@data/events/feed.json";
+  "https://raw.githubusercontent.com/anshuman542018/OrbitSense/data/events/feed.json";
 
 export async function loadFeed(): Promise<Feed> {
   // Live feed from the data branch CDN.

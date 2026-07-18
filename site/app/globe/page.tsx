@@ -1,7 +1,7 @@
 import { Globe } from "../components/Globe";
 import { loadGlobe } from "../lib/globe";
 
-export const revalidate = 900;
+export const revalidate = 300;
 
 export default async function GlobePage() {
   const data = await loadGlobe();

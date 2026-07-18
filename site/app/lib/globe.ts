@@ -15,7 +15,7 @@ export type GlobeData = {
 
 const GLOBE_URL =
   process.env.NEXT_PUBLIC_GLOBE_URL ??
-  "https://cdn.jsdelivr.net/gh/anshuman542018/OrbitSense@data/events/globe.json";
+  "https://raw.githubusercontent.com/anshuman542018/OrbitSense/data/events/globe.json";
 
 export async function loadGlobe(): Promise<GlobeData> {
   try {

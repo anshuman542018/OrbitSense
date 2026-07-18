@@ -1,7 +1,7 @@
 import { EventCardView } from "./components/EventCardView";
 import { loadFeed } from "./lib/feed";
 
-export const revalidate = 900;
+export const revalidate = 300;
 
 export default async function Home() {
   const feed = await loadFeed();
