@@ -52,14 +52,14 @@ jobs:
       - name: Commit ledger + events to data branch
         run: |
           cd data
-          if [ ! -d .git ]; then
-            git init
-            git checkout -b data
-            git remote add origin "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git"
-          fi
+          # Publish data/ as a standalone orphan branch, robust whether or not
+          # the earlier checkout of `data` succeeded (it fails on the very
+          # first run when the branch does not exist yet).
+          rm -rf .git
+          git init -q -b data
           git config user.name "orbitsense-bot"
           git config user.email "actions@github.com"
           git add -A
           git diff --cached --quiet && echo "No changes" && exit 0
-          git commit -m "ledger: $(date -u +%F)"
-          git push origin data
+          git commit -q -m "pipeline: $(date -u +%F)"
+          git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" data:data
