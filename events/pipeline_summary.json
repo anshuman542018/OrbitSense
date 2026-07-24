@@ -1,0 +1,30 @@
+{
+  "ran_at": "2026-07-24T07:21:26.733156+00:00",
+  "ingest": {
+    "fetched": 16063,
+    "parsed": 16063,
+    "partitions": [
+      "data/ledger/2026-06.parquet",
+      "data/ledger/2026-07.parquet"
+    ]
+  },
+  "ledger_objects": 16063,
+  "conjunctions": 289426,
+  "maneuvers": 0,
+  "cards": 25,
+  "feed": {
+    "written": 25,
+    "feed": "data/events/feed.json"
+  },
+  "globe": {
+    "points": 200
+  },
+  "alert": {
+    "configured": true,
+    "critical": 8,
+    "sent": 1,
+    "recipients": [
+      "anshumanvirat5@gmail.com"
+    ]
+  }
+}
