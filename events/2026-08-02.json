@@ -1,0 +1,652 @@
+[
+  {
+    "type": "conjunction_notice",
+    "headline": "STARLINK-31211 and STARLINK-31774 predicted to pass within 0.03 km",
+    "explanation": "STARLINK-31211 and STARLINK-31774 are predicted to pass within 0.03 km at 2026-08-05 06:41 UTC, closing at 0.7 km/s. This is a screening-level estimate from public elements. No collision probability is claimed; public data carries km-scale uncertainty.",
+    "confidence": "high",
+    "evidence": {
+      "object_a": {
+        "norad_id": 59031,
+        "name": "STARLINK-31211"
+      },
+      "object_b": {
+        "norad_id": 59622,
+        "name": "STARLINK-31774"
+      },
+      "tca": "2026-08-05T06:41:50.476413+00:00",
+      "miss_distance_km": 0.028,
+      "relative_speed_km_s": 0.71
+    },
+    "object_ids": [
+      59031,
+      59622
+    ],
+    "tca_or_epoch": "2026-08-05T06:41:50.476413+00:00",
+    "generated_at": "2026-08-02T07:32:34.199499+00:00",
+    "narrator": "template"
+  },
+  {
+    "type": "conjunction_notice",
+    "headline": "STARLINK-31532 and STARLINK-32569 predicted to pass within 0.05 km",
+    "explanation": "STARLINK-31532 and STARLINK-32569 are predicted to pass within 0.05 km at 2026-08-05 04:51 UTC, closing at 1.9 km/s. This is a screening-level estimate from public elements. No collision probability is claimed; public data carries km-scale uncertainty.",
+    "confidence": "high",
+    "evidence": {
+      "object_a": {
+        "norad_id": 59349,
+        "name": "STARLINK-31532"
+      },
+      "object_b": {
+        "norad_id": 61867,
+        "name": "STARLINK-32569"
+      },
+      "tca": "2026-08-05T04:51:29.418425+00:00",
+      "miss_distance_km": 0.053,
+      "relative_speed_km_s": 1.94
+    },
+    "object_ids": [
+      59349,
+      61867
+    ],
+    "tca_or_epoch": "2026-08-05T04:51:29.418425+00:00",
+    "generated_at": "2026-08-02T07:32:34.200254+00:00",
+    "narrator": "template"
+  },
+  {
+    "type": "conjunction_notice",
+    "headline": "STARLINK-31357 and STARLINK-31689 predicted to pass within 0.06 km",
+    "explanation": "STARLINK-31357 and STARLINK-31689 are predicted to pass within 0.06 km at 2026-08-05 03:33 UTC, closing at 2.3 km/s. This is a screening-level estimate from public elements. No collision probability is claimed; public data carries km-scale uncertainty.",
+    "confidence": "high",
+    "evidence": {
+      "object_a": {
+        "norad_id": 59502,
+        "name": "STARLINK-31357"
+      },
+      "object_b": {
+        "norad_id": 59567,
+        "name": "STARLINK-31689"
+      },
+      "tca": "2026-08-05T03:33:23.671788+00:00",
+      "miss_distance_km": 0.064,
+      "relative_speed_km_s": 2.31
+    },
+    "object_ids": [
+      59502,
+      59567
+    ],
+    "tca_or_epoch": "2026-08-05T03:33:23.671788+00:00",
+    "generated_at": "2026-08-02T07:32:34.209754+00:00",
+    "narrator": "template"
+  },
+  {
+    "type": "conjunction_notice",
+    "headline": "STARLINK-36419 and STARLINK-36407 predicted to pass within 0.06 km",
+    "explanation": "STARLINK-36419 and STARLINK-36407 are predicted to pass within 0.06 km at 2026-08-05 02:06 UTC, closing at 0.6 km/s. This is a screening-level estimate from public elements. No collision probability is claimed; public data carries km-scale uncertainty.",
+    "confidence": "high",
+    "evidence": {
+      "object_a": {
+        "norad_id": 67584,
+        "name": "STARLINK-36419"
+      },
+      "object_b": {
+        "norad_id": 67612,
+        "name": "STARLINK-36407"
+      },
+      "tca": "2026-08-05T02:06:39.511632+00:00",
+      "miss_distance_km": 0.064,
+      "relative_speed_km_s": 0.63
+    },
+    "object_ids": [
+      67584,
+      67612
+    ],
+    "tca_or_epoch": "2026-08-05T02:06:39.511632+00:00",
+    "generated_at": "2026-08-02T07:32:34.209812+00:00",
+    "narrator": "template"
+  },
+  {
+    "type": "conjunction_notice",
+    "headline": "STARLINK-33957 and STARLINK-33942 predicted to pass within 0.06 km",
+    "explanation": "STARLINK-33957 and STARLINK-33942 are predicted to pass within 0.06 km at 2026-08-04 19:59 UTC, closing at 0.3 km/s. This is a screening-level estimate from public elements. No collision probability is claimed; public data carries km-scale uncertainty.",
+    "confidence": "high",
+    "evidence": {
+      "object_a": {
+        "norad_id": 63897,
+        "name": "STARLINK-33957"
+      },
+      "object_b": {
+        "norad_id": 63974,
+        "name": "STARLINK-33942"
+      },
+      "tca": "2026-08-04T19:59:38.067453+00:00",
+      "miss_distance_km": 0.061,
+      "relative_speed_km_s": 0.33
+    },
+    "object_ids": [
+      63897,
+      63974
+    ],
+    "tca_or_epoch": "2026-08-04T19:59:38.067453+00:00",
+    "generated_at": "2026-08-02T07:32:34.200539+00:00",
+    "narrator": "template"
+  },
+  {
+    "type": "conjunction_notice",
+    "headline": "STARLINK-31343 and STARLINK-31669 predicted to pass within 0.06 km",
+    "explanation": "STARLINK-31343 and STARLINK-31669 are predicted to pass within 0.06 km at 2026-08-04 16:14 UTC, closing at 0.6 km/s. This is a screening-level estimate from public elements. No collision probability is claimed; public data carries km-scale uncertainty.",
+    "confidence": "high",
+    "evidence": {
+      "object_a": {
+        "norad_id": 59093,
+        "name": "STARLINK-31343"
+      },
+      "object_b": {
+        "norad_id": 59515,
+        "name": "STARLINK-31669"
+      },
+      "tca": "2026-08-04T16:14:32.329192+00:00",
+      "miss_distance_km": 0.065,
+      "relative_speed_km_s": 0.62
+    },
+    "object_ids": [
+      59093,
+      59515
+    ],
+    "tca_or_epoch": "2026-08-04T16:14:32.329192+00:00",
+    "generated_at": "2026-08-02T07:32:34.209897+00:00",
+    "narrator": "template"
+  },
+  {
+    "type": "conjunction_notice",
+    "headline": "STARLINK-32668 and STARLINK-35620 predicted to pass within 0.05 km",
+    "explanation": "STARLINK-32668 and STARLINK-35620 are predicted to pass within 0.05 km at 2026-08-04 14:37 UTC, closing at 2.6 km/s. This is a screening-level estimate from public elements. No collision probability is claimed; public data carries km-scale uncertainty.",
+    "confidence": "high",
+    "evidence": {
+      "object_a": {
+        "norad_id": 62212,
+        "name": "STARLINK-32668"
+      },
+      "object_b": {
+        "norad_id": 66474,
+        "name": "STARLINK-35620"
+      },
+      "tca": "2026-08-04T14:37:31.588275+00:00",
+      "miss_distance_km": 0.048,
+      "relative_speed_km_s": 2.56
+    },
+    "object_ids": [
+      62212,
+      66474
+    ],
+    "tca_or_epoch": "2026-08-04T14:37:31.588275+00:00",
+    "generated_at": "2026-08-02T07:32:34.200087+00:00",
+    "narrator": "template"
+  },
+  {
+    "type": "conjunction_notice",
+    "headline": "STARLINK-30216 and STARLINK-31927 predicted to pass within 0.05 km",
+    "explanation": "STARLINK-30216 and STARLINK-31927 are predicted to pass within 0.05 km at 2026-08-04 13:22 UTC, closing at 1.4 km/s. This is a screening-level estimate from public elements. No collision probability is claimed; public data carries km-scale uncertainty.",
+    "confidence": "high",
+    "evidence": {
+      "object_a": {
+        "norad_id": 57451,
+        "name": "STARLINK-30216"
+      },
+      "object_b": {
+        "norad_id": 59837,
+        "name": "STARLINK-31927"
+      },
+      "tca": "2026-08-04T13:22:09.146384+00:00",
+      "miss_distance_km": 0.052,
+      "relative_speed_km_s": 1.35
+    },
+    "object_ids": [
+      57451,
+      59837
+    ],
+    "tca_or_epoch": "2026-08-04T13:22:09.146384+00:00",
+    "generated_at": "2026-08-02T07:32:34.200213+00:00",
+    "narrator": "template"
+  },
+  {
+    "type": "conjunction_notice",
+    "headline": "STARLINK-6314 and STARLINK-30308 predicted to pass within 0.05 km",
+    "explanation": "STARLINK-6314 and STARLINK-30308 are predicted to pass within 0.05 km at 2026-08-04 12:42 UTC, closing at 2.3 km/s. This is a screening-level estimate from public elements. No collision probability is claimed; public data carries km-scale uncertainty.",
+    "confidence": "high",
+    "evidence": {
+      "object_a": {
+        "norad_id": 56538,
+        "name": "STARLINK-6314"
+      },
+      "object_b": {
+        "norad_id": 57742,
+        "name": "STARLINK-30308"
+      },
+      "tca": "2026-08-04T12:42:24.623042+00:00",
+      "miss_distance_km": 0.049,
+      "relative_speed_km_s": 2.31
+    },
+    "object_ids": [
+      56538,
+      57742
+    ],
+    "tca_or_epoch": "2026-08-04T12:42:24.623042+00:00",
+    "generated_at": "2026-08-02T07:32:34.200130+00:00",
+    "narrator": "template"
+  },
+  {
+    "type": "conjunction_notice",
+    "headline": "STARLINK-5862 and STARLINK-34470 predicted to pass within 0.06 km",
+    "explanation": "STARLINK-5862 and STARLINK-34470 are predicted to pass within 0.06 km at 2026-08-04 07:15 UTC, closing at 3.6 km/s. This is a screening-level estimate from public elements. No collision probability is claimed; public data carries km-scale uncertainty.",
+    "confidence": "high",
+    "evidence": {
+      "object_a": {
+        "norad_id": 55920,
+        "name": "STARLINK-5862"
+      },
+      "object_b": {
+        "norad_id": 64703,
+        "name": "STARLINK-34470"
+      },
+      "tca": "2026-08-04T07:15:09.159546+00:00",
+      "miss_distance_km": 0.06,
+      "relative_speed_km_s": 3.64
+    },
+    "object_ids": [
+      55920,
+      64703
+    ],
+    "tca_or_epoch": "2026-08-04T07:15:09.159546+00:00",
+    "generated_at": "2026-08-02T07:32:34.200495+00:00",
+    "narrator": "template"
+  },
+  {
+    "type": "conjunction_notice",
+    "headline": "STARLINK-5366 and STARLINK-5698 predicted to pass within 0.02 km",
+    "explanation": "STARLINK-5366 and STARLINK-5698 are predicted to pass within 0.02 km at 2026-08-04 02:49 UTC, closing at 1.3 km/s. This is a screening-level estimate from public elements. No collision probability is claimed; public data carries km-scale uncertainty.",
+    "confidence": "high",
+    "evidence": {
+      "object_a": {
+        "norad_id": 55499,
+        "name": "STARLINK-5366"
+      },
+      "object_b": {
+        "norad_id": 55623,
+        "name": "STARLINK-5698"
+      },
+      "tca": "2026-08-04T02:49:54.274091+00:00",
+      "miss_distance_km": 0.025,
+      "relative_speed_km_s": 1.35
+    },
+    "object_ids": [
+      55499,
+      55623
+    ],
+    "tca_or_epoch": "2026-08-04T02:49:54.274091+00:00",
+    "generated_at": "2026-08-02T07:32:34.199399+00:00",
+    "narrator": "template"
+  },
+  {
+    "type": "conjunction_notice",
+    "headline": "STARLINK-32765 and STARLINK-34127 predicted to pass within 0.04 km",
+    "explanation": "STARLINK-32765 and STARLINK-34127 are predicted to pass within 0.04 km at 2026-08-03 21:43 UTC, closing at 1.6 km/s. This is a screening-level estimate from public elements. No collision probability is claimed; public data carries km-scale uncertainty.",
+    "confidence": "high",
+    "evidence": {
+      "object_a": {
+        "norad_id": 62747,
+        "name": "STARLINK-32765"
+      },
+      "object_b": {
+        "norad_id": 63810,
+        "name": "STARLINK-34127"
+      },
+      "tca": "2026-08-03T21:43:56.752422+00:00",
+      "miss_distance_km": 0.04,
+      "relative_speed_km_s": 1.62
+    },
+    "object_ids": [
+      62747,
+      63810
+    ],
+    "tca_or_epoch": "2026-08-03T21:43:56.752422+00:00",
+    "generated_at": "2026-08-02T07:32:34.199680+00:00",
+    "narrator": "template"
+  },
+  {
+    "type": "conjunction_notice",
+    "headline": "STARLINK-34399 and STARLINK-35593 predicted to pass within 0.05 km",
+    "explanation": "STARLINK-34399 and STARLINK-35593 are predicted to pass within 0.05 km at 2026-08-03 19:11 UTC, closing at 1.7 km/s. This is a screening-level estimate from public elements. No collision probability is claimed; public data carries km-scale uncertainty.",
+    "confidence": "high",
+    "evidence": {
+      "object_a": {
+        "norad_id": 64444,
+        "name": "STARLINK-34399"
+      },
+      "object_b": {
+        "norad_id": 66107,
+        "name": "STARLINK-35593"
+      },
+      "tca": "2026-08-03T19:11:18.027926+00:00",
+      "miss_distance_km": 0.051,
+      "relative_speed_km_s": 1.72
+    },
+    "object_ids": [
+      64444,
+      66107
+    ],
+    "tca_or_epoch": "2026-08-03T19:11:18.027926+00:00",
+    "generated_at": "2026-08-02T07:32:34.200172+00:00",
+    "narrator": "template"
+  },
+  {
+    "type": "conjunction_notice",
+    "headline": "STARLINK-30906 and STARLINK-30977 predicted to pass within 0.06 km",
+    "explanation": "STARLINK-30906 and STARLINK-30977 are predicted to pass within 0.06 km at 2026-08-03 08:32 UTC, closing at 1.3 km/s. This is a screening-level estimate from public elements. No collision probability is claimed; public data carries km-scale uncertainty.",
+    "confidence": "high",
+    "evidence": {
+      "object_a": {
+        "norad_id": 58408,
+        "name": "STARLINK-30906"
+      },
+      "object_b": {
+        "norad_id": 58459,
+        "name": "STARLINK-30977"
+      },
+      "tca": "2026-08-03T08:32:23.244695+00:00",
+      "miss_distance_km": 0.059,
+      "relative_speed_km_s": 1.3
+    },
+    "object_ids": [
+      58408,
+      58459
+    ],
+    "tca_or_epoch": "2026-08-03T08:32:23.244695+00:00",
+    "generated_at": "2026-08-02T07:32:34.200374+00:00",
+    "narrator": "template"
+  },
+  {
+    "type": "conjunction_notice",
+    "headline": "STARLINK-5609 and STARLINK-6129 predicted to pass within 0.06 km",
+    "explanation": "STARLINK-5609 and STARLINK-6129 are predicted to pass within 0.06 km at 2026-08-03 07:41 UTC, closing at 2.0 km/s. This is a screening-level estimate from public elements. No collision probability is claimed; public data carries km-scale uncertainty.",
+    "confidence": "high",
+    "evidence": {
+      "object_a": {
+        "norad_id": 55348,
+        "name": "STARLINK-5609"
+      },
+      "object_b": {
+        "norad_id": 57116,
+        "name": "STARLINK-6129"
+      },
+      "tca": "2026-08-03T07:41:33.704021+00:00",
+      "miss_distance_km": 0.06,
+      "relative_speed_km_s": 1.98
+    },
+    "object_ids": [
+      55348,
+      57116
+    ],
+    "tca_or_epoch": "2026-08-03T07:41:33.704021+00:00",
+    "generated_at": "2026-08-02T07:32:34.200413+00:00",
+    "narrator": "template"
+  },
+  {
+    "type": "conjunction_notice",
+    "headline": "STARLINK-5013 and STARLINK-30515 predicted to pass within 0.02 km",
+    "explanation": "STARLINK-5013 and STARLINK-30515 are predicted to pass within 0.02 km at 2026-08-03 07:08 UTC, closing at 1.3 km/s. This is a screening-level estimate from public elements. No collision probability is claimed; public data carries km-scale uncertainty.",
+    "confidence": "high",
+    "evidence": {
+      "object_a": {
+        "norad_id": 55492,
+        "name": "STARLINK-5013"
+      },
+      "object_b": {
+        "norad_id": 57983,
+        "name": "STARLINK-30515"
+      },
+      "tca": "2026-08-03T07:08:34.800118+00:00",
+      "miss_distance_km": 0.02,
+      "relative_speed_km_s": 1.29
+    },
+    "object_ids": [
+      55492,
+      57983
+    ],
+    "tca_or_epoch": "2026-08-03T07:08:34.800118+00:00",
+    "generated_at": "2026-08-02T07:32:34.198933+00:00",
+    "narrator": "template"
+  },
+  {
+    "type": "conjunction_notice",
+    "headline": "STARLINK-30520 and STARLINK-36994 predicted to pass within 0.03 km",
+    "explanation": "STARLINK-30520 and STARLINK-36994 are predicted to pass within 0.03 km at 2026-08-03 06:40 UTC, closing at 1.7 km/s. This is a screening-level estimate from public elements. No collision probability is claimed; public data carries km-scale uncertainty.",
+    "confidence": "high",
+    "evidence": {
+      "object_a": {
+        "norad_id": 58010,
+        "name": "STARLINK-30520"
+      },
+      "object_b": {
+        "norad_id": 67997,
+        "name": "STARLINK-36994"
+      },
+      "tca": "2026-08-03T06:40:05.555640+00:00",
+      "miss_distance_km": 0.035,
+      "relative_speed_km_s": 1.66
+    },
+    "object_ids": [
+      58010,
+      67997
+    ],
+    "tca_or_epoch": "2026-08-03T06:40:05.555640+00:00",
+    "generated_at": "2026-08-02T07:32:34.199596+00:00",
+    "narrator": "template"
+  },
+  {
+    "type": "conjunction_notice",
+    "headline": "STARLINK-30330 and STARLINK-31004 predicted to pass within 0.04 km",
+    "explanation": "STARLINK-30330 and STARLINK-31004 are predicted to pass within 0.04 km at 2026-08-03 02:40 UTC, closing at 0.9 km/s. This is a screening-level estimate from public elements. No collision probability is claimed; public data carries km-scale uncertainty.",
+    "confidence": "high",
+    "evidence": {
+      "object_a": {
+        "norad_id": 57636,
+        "name": "STARLINK-30330"
+      },
+      "object_b": {
+        "norad_id": 58528,
+        "name": "STARLINK-31004"
+      },
+      "tca": "2026-08-03T02:40:23.261396+00:00",
+      "miss_distance_km": 0.038,
+      "relative_speed_km_s": 0.95
+    },
+    "object_ids": [
+      57636,
+      58528
+    ],
+    "tca_or_epoch": "2026-08-03T02:40:23.261396+00:00",
+    "generated_at": "2026-08-02T07:32:34.199636+00:00",
+    "narrator": "template"
+  },
+  {
+    "type": "conjunction_notice",
+    "headline": "STARLINK-35008 and STARLINK-35402 predicted to pass within 0.04 km",
+    "explanation": "STARLINK-35008 and STARLINK-35402 are predicted to pass within 0.04 km at 2026-08-03 00:57 UTC, closing at 1.4 km/s. This is a screening-level estimate from public elements. No collision probability is claimed; public data carries km-scale uncertainty.",
+    "confidence": "high",
+    "evidence": {
+      "object_a": {
+        "norad_id": 65408,
+        "name": "STARLINK-35008"
+      },
+      "object_b": {
+        "norad_id": 66079,
+        "name": "STARLINK-35402"
+      },
+      "tca": "2026-08-03T00:57:18.401609+00:00",
+      "miss_distance_km": 0.044,
+      "relative_speed_km_s": 1.35
+    },
+    "object_ids": [
+      65408,
+      66079
+    ],
+    "tca_or_epoch": "2026-08-03T00:57:18.401609+00:00",
+    "generated_at": "2026-08-02T07:32:34.200039+00:00",
+    "narrator": "template"
+  },
+  {
+    "type": "conjunction_notice",
+    "headline": "STARLINK-32586 and STARLINK-36542 predicted to pass within 0.04 km",
+    "explanation": "STARLINK-32586 and STARLINK-36542 are predicted to pass within 0.04 km at 2026-08-02 23:16 UTC, closing at 2.3 km/s. This is a screening-level estimate from public elements. No collision probability is claimed; public data carries km-scale uncertainty.",
+    "confidence": "high",
+    "evidence": {
+      "object_a": {
+        "norad_id": 61975,
+        "name": "STARLINK-32586"
+      },
+      "object_b": {
+        "norad_id": 67445,
+        "name": "STARLINK-36542"
+      },
+      "tca": "2026-08-02T23:16:35.192626+00:00",
+      "miss_distance_km": 0.041,
+      "relative_speed_km_s": 2.31
+    },
+    "object_ids": [
+      61975,
+      67445
+    ],
+    "tca_or_epoch": "2026-08-02T23:16:35.192626+00:00",
+    "generated_at": "2026-08-02T07:32:34.199982+00:00",
+    "narrator": "template"
+  },
+  {
+    "type": "conjunction_notice",
+    "headline": "STARLINK-35163 and STARLINK-37027 predicted to pass within 0.03 km",
+    "explanation": "STARLINK-35163 and STARLINK-37027 are predicted to pass within 0.03 km at 2026-08-02 15:21 UTC, closing at 1.9 km/s. This is a screening-level estimate from public elements. No collision probability is claimed; public data carries km-scale uncertainty.",
+    "confidence": "high",
+    "evidence": {
+      "object_a": {
+        "norad_id": 65507,
+        "name": "STARLINK-35163"
+      },
+      "object_b": {
+        "norad_id": 68232,
+        "name": "STARLINK-37027"
+      },
+      "tca": "2026-08-02T15:21:28.177559+00:00",
+      "miss_distance_km": 0.031,
+      "relative_speed_km_s": 1.92
+    },
+    "object_ids": [
+      65507,
+      68232
+    ],
+    "tca_or_epoch": "2026-08-02T15:21:28.177559+00:00",
+    "generated_at": "2026-08-02T07:32:34.199553+00:00",
+    "narrator": "template"
+  },
+  {
+    "type": "conjunction_notice",
+    "headline": "STARLINK-6077 and STARLINK-31963 predicted to pass within 0.06 km",
+    "explanation": "STARLINK-6077 and STARLINK-31963 are predicted to pass within 0.06 km at 2026-08-02 11:21 UTC, closing at 1.0 km/s. This is a screening-level estimate from public elements. No collision probability is claimed; public data carries km-scale uncertainty.",
+    "confidence": "high",
+    "evidence": {
+      "object_a": {
+        "norad_id": 56097,
+        "name": "STARLINK-6077"
+      },
+      "object_b": {
+        "norad_id": 59893,
+        "name": "STARLINK-31963"
+      },
+      "tca": "2026-08-02T11:21:42.901850+00:00",
+      "miss_distance_km": 0.065,
+      "relative_speed_km_s": 1.02
+    },
+    "object_ids": [
+      56097,
+      59893
+    ],
+    "tca_or_epoch": "2026-08-02T11:21:42.901850+00:00",
+    "generated_at": "2026-08-02T07:32:34.209856+00:00",
+    "narrator": "template"
+  },
+  {
+    "type": "conjunction_notice",
+    "headline": "STARLINK-30141 and STARLINK-30604 predicted to pass within 0.06 km",
+    "explanation": "STARLINK-30141 and STARLINK-30604 are predicted to pass within 0.06 km at 2026-08-02 10:59 UTC, closing at 0.3 km/s. This is a screening-level estimate from public elements. No collision probability is claimed; public data carries km-scale uncertainty.",
+    "confidence": "high",
+    "evidence": {
+      "object_a": {
+        "norad_id": 57620,
+        "name": "STARLINK-30141"
+      },
+      "object_b": {
+        "norad_id": 58075,
+        "name": "STARLINK-30604"
+      },
+      "tca": "2026-08-02T10:59:50.987018+00:00",
+      "miss_distance_km": 0.058,
+      "relative_speed_km_s": 0.34
+    },
+    "object_ids": [
+      57620,
+      58075
+    ],
+    "tca_or_epoch": "2026-08-02T10:59:50.987018+00:00",
+    "generated_at": "2026-08-02T07:32:34.200334+00:00",
+    "narrator": "template"
+  },
+  {
+    "type": "conjunction_notice",
+    "headline": "STARLINK-30266 and STARLINK-32915 predicted to pass within 0.06 km",
+    "explanation": "STARLINK-30266 and STARLINK-32915 are predicted to pass within 0.06 km at 2026-08-02 10:06 UTC, closing at 1.9 km/s. This is a screening-level estimate from public elements. No collision probability is claimed; public data carries km-scale uncertainty.",
+    "confidence": "high",
+    "evidence": {
+      "object_a": {
+        "norad_id": 57529,
+        "name": "STARLINK-30266"
+      },
+      "object_b": {
+        "norad_id": 63152,
+        "name": "STARLINK-32915"
+      },
+      "tca": "2026-08-02T10:06:32.296568+00:00",
+      "miss_distance_km": 0.055,
+      "relative_speed_km_s": 1.95
+    },
+    "object_ids": [
+      57529,
+      63152
+    ],
+    "tca_or_epoch": "2026-08-02T10:06:32.296568+00:00",
+    "generated_at": "2026-08-02T07:32:34.200294+00:00",
+    "narrator": "template"
+  },
+  {
+    "type": "conjunction_notice",
+    "headline": "STARLINK-5679 and STARLINK-30165 predicted to pass within 0.02 km",
+    "explanation": "STARLINK-5679 and STARLINK-30165 are predicted to pass within 0.02 km at 2026-08-02 09:51 UTC, closing at 0.7 km/s. This is a screening-level estimate from public elements. No collision probability is claimed; public data carries km-scale uncertainty.",
+    "confidence": "high",
+    "evidence": {
+      "object_a": {
+        "norad_id": 55467,
+        "name": "STARLINK-5679"
+      },
+      "object_b": {
+        "norad_id": 57457,
+        "name": "STARLINK-30165"
+      },
+      "tca": "2026-08-02T09:51:09.181954+00:00",
+      "miss_distance_km": 0.023,
+      "relative_speed_km_s": 0.71
+    },
+    "object_ids": [
+      55467,
+      57457
+    ],
+    "tca_or_epoch": "2026-08-02T09:51:09.181954+00:00",
+    "generated_at": "2026-08-02T07:32:34.199331+00:00",
+    "narrator": "template"
+  }
+]
