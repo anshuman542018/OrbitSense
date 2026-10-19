@@ -1,18 +1,10 @@
 {
-  "week_start": "2026-10-05",
-  "week_end": "2026-10-11",
+  "week_start": "2026-10-12",
+  "week_end": "2026-10-18",
   "objects_tracked": 16063,
   "maneuvers_detected": 0,
   "top_maneuvers": [],
-  "conjunctions_screened": 25,
-  "closest_approach": {
-    "objects": [
-      "STARLINK-33813",
-      "STARLINK-35598"
-    ],
-    "miss_distance_km": 0.046,
-    "relative_speed_km_s": 2.67,
-    "tca": "2026-10-06T23:57:01.212146+00:00"
-  },
+  "conjunctions_screened": 0,
+  "closest_approach": null,
   "busiest_object": null
 }
